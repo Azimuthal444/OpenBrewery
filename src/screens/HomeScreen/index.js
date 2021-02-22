@@ -1,22 +1,22 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {SearchBar, Text} from 'react-native-elements';
 
-import {getBreweriesList} from './services';
+import {cancelToken, getBreweriesList, searchBreweriesList} from './services';
 import Item from '../../components/Item';
 import strings from '../../constants/strings';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import styles from './styles';
 import colors from '../../styles/colors';
 import {FlatList} from 'react-native-gesture-handler';
-import fonts from '../../styles/fonts';
 
 const HomeScreen = () => {
   const [breweriesList, setBreweriesList] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [fetchMore, setFetchMore] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [searchList, setSearchList] = useState([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -30,11 +30,28 @@ const HomeScreen = () => {
           }
           return setBreweriesList(data);
         } catch (error) {
-          setBreweriesList(undefined);
+          setBreweriesList([]);
         }
       })();
     }, [pageNumber]),
   );
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (searchText) {
+          setFetchMore(true);
+          const data = await searchBreweriesList({
+            params: {query: encodeURIComponent(searchText), ['per_page']: 50},
+          });
+          setFetchMore(false);
+          setSearchList(data);
+        }
+      } catch (error) {
+        setSearchList([]);
+      }
+    })();
+  }, [searchText]);
 
   const renderItem = useCallback(
     ({item}) => <Item item={item} onPress={() => console.log('Pressed')} />,
@@ -59,14 +76,16 @@ const HomeScreen = () => {
     [fetchMore],
   );
 
-  const ListEmptyComponent = useCallback(
-    () => (
-      <View style={styles.emptyComponentContainer}>
-        <Text style={styles.emptyListText}>{strings.emptyListText}</Text>
-      </View>
-    ),
-    [],
-  );
+  const ListEmptyComponent = useCallback(() => {
+    if (!fetchMore) {
+      return (
+        <View style={styles.emptyComponentContainer}>
+          <Text style={styles.emptyListText}>{strings.emptyListText}</Text>
+        </View>
+      );
+    }
+    return null;
+  }, [fetchMore]);
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -80,7 +99,7 @@ const HomeScreen = () => {
         <FlatList
           contentContainerStyle={styles.flatListContent}
           pointerEvents={fetchMore ? 'none' : 'auto'}
-          data={breweriesList}
+          data={searchText ? searchList : breweriesList}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           onEndReachedThreshold={0.5}

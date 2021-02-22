@@ -1,1 +1,1 @@
-export default {breweries: '/breweries'};
+export default {breweries: '/breweries', breweriesSearch: '/breweries/search'};
