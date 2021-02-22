@@ -2,22 +2,17 @@ import React from 'react';
 import {ListItem} from 'react-native-elements';
 
 const Item = ({
-  item: {
-    name = 'N/A',
-    city = 'N/A',
-    state = 'N/A',
-    country = 'N/A',
-    phone = 'N/A',
-  },
+  item: {name, city, state, country, phone},
+  onPress = undefined,
 }) => {
   return (
-    <ListItem onPress={() => console.log('Pressed')}>
+    <ListItem onPress={onPress} bottomDivider>
       <ListItem.Content>
-        <ListItem.Title>{name}</ListItem.Title>
-        <ListItem.Subtitle>{city}</ListItem.Subtitle>
-        <ListItem.Subtitle>{state}</ListItem.Subtitle>
-        <ListItem.Subtitle>{country}</ListItem.Subtitle>
-        <ListItem.Subtitle>{'+' + phone}</ListItem.Subtitle>
+        {Boolean(name) && <ListItem.Title>{name}</ListItem.Title>}
+        {Boolean(city) && <ListItem.Subtitle>{city}</ListItem.Subtitle>}
+        {Boolean(state) && <ListItem.Subtitle>{state}</ListItem.Subtitle>}
+        {Boolean(country) && <ListItem.Subtitle>{country}</ListItem.Subtitle>}
+        {Boolean(phone) && <ListItem.Subtitle>{'+' + phone}</ListItem.Subtitle>}
       </ListItem.Content>
       <ListItem.Chevron name={'keyboard-arrow-right'} />
     </ListItem>
