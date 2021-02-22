@@ -1,8 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {Text} from 'react-native';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import RootNavigation from './src/navigations';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import RootNavigation from './src/navigation';
 
 const App = () => {
   return (
