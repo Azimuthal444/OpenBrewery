@@ -9,4 +9,8 @@ export default StyleSheet.create({
   },
   logo: {width: 40, aspectRatio: 1 / 1},
   headerTitle: {fontFamily: fonts.montserratBold, fontSize: 24},
+  detailsHeaderTitle: {
+    fontFamily: fonts.montserratMedium,
+    fontSize: 16,
+  },
 });

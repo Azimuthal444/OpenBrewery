@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {ActivityIndicator, View} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {SearchBar, Text} from 'react-native-elements';
 
 import {cancelToken, getBreweriesList, searchBreweriesList} from './services';
@@ -10,8 +10,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import styles from './styles';
 import colors from '../../styles/colors';
 import {FlatList} from 'react-native-gesture-handler';
+import {screenNames} from '../../constants/constants';
 
 const HomeScreen = () => {
+  const {navigate} = useNavigation();
   const [breweriesList, setBreweriesList] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [fetchMore, setFetchMore] = useState(false);
@@ -54,8 +56,13 @@ const HomeScreen = () => {
   }, [searchText]);
 
   const renderItem = useCallback(
-    ({item}) => <Item item={item} onPress={() => console.log('Pressed')} />,
-    [],
+    ({item}) => (
+      <Item
+        item={item}
+        onPress={() => navigate(screenNames.breweryDetailsScreen, item)}
+      />
+    ),
+    [navigate],
   );
 
   const keyExtractor = useCallback(({id}) => String(id), []);

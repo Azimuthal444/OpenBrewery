@@ -7,6 +7,7 @@ import HomeScreen from '../../screens/HomeScreen';
 import strings from '../../constants/strings';
 import images from '../../assets/images';
 import styles from './styles';
+import BreweryDetailsScreen from '../../screens/BreweryDetailsScreen';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,21 @@ const AppNavigation = () => {
             </View>
           ),
         }}
+      />
+      <Stack.Screen
+        name={screenNames.breweryDetailsScreen}
+        component={BreweryDetailsScreen}
+        options={({
+          route: {
+            params: {name},
+          },
+        }) => ({
+          headerTitle: () => (
+            <View>
+              <Text style={styles.detailsHeaderTitle}>{name}</Text>
+            </View>
+          ),
+        })}
       />
     </Stack.Navigator>
   );
